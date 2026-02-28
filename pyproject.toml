@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "edge-checker"
+version = "0.1.0"
+description = "A tool for checking and validating edges in graphs and networks"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+keywords = ["graph", "edge", "validation", "checker"]
+
+[project.scripts]
+edge-checker = "edge_checker.__main__:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
