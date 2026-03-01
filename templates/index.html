@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Edge Checker — Upcoming Fixtures{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <div class="hero">
+    <h1>Find the <span class="accent">Edge</span> in Every Bet</h1>
+    <p class="hero-sub">Real stats behind every fixture. Compare odds. Bet smarter.</p>
+  </div>
+
+  <!-- League tabs -->
+  <div class="league-tabs">
+    {% for lid, info in leagues.items() %}
+    <a href="/?league={{ lid }}"
+       class="league-tab {% if lid == selected_league %}active{% endif %}">
+      {{ info.flag }} {{ info.name }}
+    </a>
+    {% endfor %}
+  </div>
+
+  <!-- Fixtures grid -->
+  {% if fixtures %}
+  <div class="fixtures-grid">
+    {% for f in fixtures %}
+    {% set home = f.teams.home %}
+    {% set away = f.teams.away %}
+    {% set fid  = f.fixture.id %}
+    <a href="/match/{{ fid }}" class="fixture-card">
+      <div class="fixture-league">
+        {{ f.league.name }} &mdash; {{ f.league.round }}
+      </div>
+      <div class="fixture-teams">
+        <div class="team">
+          <img src="{{ home.logo }}" alt="{{ home.name }}" class="team-logo"
+               onerror="this.style.display='none'" />
+          <span class="team-name">{{ home.name }}</span>
+        </div>
+        <div class="vs-block">
+          <span class="vs">VS</span>
+          <span class="fixture-time">{{ f.fixture.date | replace("T", " ") | truncate(16, True, "") }}</span>
+        </div>
+        <div class="team team-away">
+          <img src="{{ away.logo }}" alt="{{ away.name }}" class="team-logo"
+               onerror="this.style.display='none'" />
+          <span class="team-name">{{ away.name }}</span>
+        </div>
+      </div>
+      <div class="fixture-footer">
+        <span class="venue">📍 {{ f.fixture.venue.name if f.fixture.venue else "" }}</span>
+        <span class="cta">View Analysis →</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <p>No upcoming fixtures found for this league.</p>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

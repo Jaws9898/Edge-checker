@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+{% block title %}{{ home.name }} vs {{ away.name }} — Edge Checker{% endblock %}
+
+{% macro form_pill(result) %}
+  <span class="form-pill {{ result }}">{{ result }}</span>
+{% endmacro %}
+
+{% block content %}
+<div class="container">
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="/?league={{ league_id }}">
+      {{ leagues[league_id].flag }} {{ leagues[league_id].name }}
+    </a>
+    <span>›</span>
+    <span>{{ home.name }} vs {{ away.name }}</span>
+  </div>
+
+  <!-- Match header -->
+  <div class="match-header">
+    <div class="match-team match-team-home">
+      <img src="{{ home.logo }}" alt="{{ home.name }}" class="match-logo"
+           onerror="this.style.display='none'" />
+      <h2>{{ home.name }}</h2>
+      <div class="form-row">
+        {% for r, gf, ga in home_form %}{{ form_pill(r) }}{% endfor %}
+      </div>
+    </div>
+
+    <div class="match-centre">
+      <div class="match-label">{{ fixture.league.name }}</div>
+      <div class="match-vs">VS</div>
+      <div class="match-date">{{ fixture.fixture.date[:10] }}</div>
+      <div class="match-venue">{{ fixture.fixture.venue.name if fixture.fixture.venue else "" }}</div>
+    </div>
+
+    <div class="match-team match-team-away">
+      <img src="{{ away.logo }}" alt="{{ away.name }}" class="match-logo"
+           onerror="this.style.display='none'" />
+      <h2>{{ away.name }}</h2>
+      <div class="form-row">
+        {% for r, gf, ga in away_form %}{{ form_pill(r) }}{% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Edge verdict card -->
+  <div class="verdict-card">
+    <h3 class="section-title">⚡ Edge Verdict</h3>
+    <div class="verdict-inner">
+
+      <div class="prob-bars">
+        <div class="prob-item">
+          <span class="prob-label">{{ home.name }}</span>
+          <div class="prob-bar-track">
+            <div class="prob-bar home-bar" style="width: {{ verdict.home_pct }}%"></div>
+          </div>
+          <span class="prob-pct">{{ verdict.home_pct }}%</span>
+        </div>
+        <div class="prob-item">
+          <span class="prob-label">Draw</span>
+          <div class="prob-bar-track">
+            <div class="prob-bar draw-bar" style="width: {{ verdict.draw_pct }}%"></div>
+          </div>
+          <span class="prob-pct">{{ verdict.draw_pct }}%</span>
+        </div>
+        <div class="prob-item">
+          <span class="prob-label">{{ away.name }}</span>
+          <div class="prob-bar-track">
+            <div class="prob-bar away-bar" style="width: {{ verdict.away_pct }}%"></div>
+          </div>
+          <span class="prob-pct">{{ verdict.away_pct }}%</span>
+        </div>
+      </div>
+
+      <div class="verdict-tips">
+        <div class="tip-box">
+          <span class="tip-label">Suggested Bet</span>
+          <span class="tip-value">{{ verdict.tip }}</span>
+          <span class="confidence confidence-{{ verdict.tip_confidence | lower }}">
+            {{ verdict.tip_confidence }} confidence
+          </span>
+        </div>
+        <div class="tip-box">
+          <span class="tip-label">BTTS</span>
+          <span class="tip-value {% if verdict.btts_likely %}tip-yes{% else %}tip-no{% endif %}">
+            {% if verdict.btts_likely %}Likely ✓{% else %}Unlikely ✗{% endif %}
+          </span>
+        </div>
+        <div class="tip-box">
+          <span class="tip-label">Over 2.5 Goals</span>
+          <span class="tip-value {% if verdict.over25_likely %}tip-yes{% else %}tip-no{% endif %}">
+            {% if verdict.over25_likely %}Likely ✓{% else %}Unlikely ✗{% endif %}
+          </span>
+        </div>
+        {% if verdict.value_tip %}
+        <div class="tip-box tip-box-value">
+          <span class="tip-label">💰 Value Spot</span>
+          <span class="tip-value">{{ verdict.value_tip }}</span>
+        </div>
+        {% endif %}
+      </div>
+
+    </div>
+    <p class="verdict-disclaimer">Based on last 5 results + head-to-head. Not financial advice.</p>
+  </div>
+
+  <!-- Stats comparison -->
+  <div class="stats-section">
+    <h3 class="section-title">📊 Form &amp; Stats (Last 5)</h3>
+    <div class="stats-grid">
+      <div class="stat-col">
+        {% for label, hval, aval, higher_is_better in [
+          ("Wins",         home_stats.wins,    away_stats.wins,    True),
+          ("Draws",        home_stats.draws,   away_stats.draws,   False),
+          ("Losses",       home_stats.losses,  away_stats.losses,  False),
+          ("Goals Scored", home_stats.gf,      away_stats.gf,      True),
+          ("Goals Conceded",home_stats.ga,     away_stats.ga,      False),
+          ("Avg Goals For",home_stats.avg_gf,  away_stats.avg_gf,  True),
+          ("BTTS Games",   home_stats.btts,    away_stats.btts,    True),
+        ] %}
+        <div class="stat-row">
+          <span class="stat-val {% if higher_is_better and hval > aval %}stat-best{% elif not higher_is_better and hval < aval %}stat-best{% endif %}">
+            {{ hval }}
+          </span>
+          <span class="stat-label">{{ label }}</span>
+          <span class="stat-val {% if higher_is_better and aval > hval %}stat-best{% elif not higher_is_better and aval < hval %}stat-best{% endif %}">
+            {{ aval }}
+          </span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="stats-legend">
+      <span class="team-tag home-tag">{{ home.name }}</span>
+      <span class="team-tag away-tag">{{ away.name }}</span>
+    </div>
+  </div>
+
+  <!-- Head to head -->
+  <div class="h2h-section">
+    <h3 class="section-title">🔁 Head to Head</h3>
+    <div class="h2h-summary">
+      <div class="h2h-block h2h-home">
+        <span class="h2h-num">{{ h2h.home_wins }}</span>
+        <span class="h2h-lbl">{{ home.name }} Wins</span>
+      </div>
+      <div class="h2h-block h2h-draw">
+        <span class="h2h-num">{{ h2h.draws }}</span>
+        <span class="h2h-lbl">Draws</span>
+      </div>
+      <div class="h2h-block h2h-away">
+        <span class="h2h-num">{{ h2h.away_wins }}</span>
+        <span class="h2h-lbl">{{ away.name }} Wins</span>
+      </div>
+    </div>
+    {% if h2h.recent %}
+    <div class="h2h-recent">
+      <p class="h2h-recent-label">Recent meetings</p>
+      <div class="form-row">
+        {% for r, gf, ga in h2h.recent %}
+        <span class="h2h-pill {{ r }}">
+          {{ form_pill(r) }} {{ gf }}–{{ ga }}
+        </span>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Odds comparison -->
+  {% if odds %}
+  <div class="odds-section">
+    <h3 class="section-title">💷 Best Odds</h3>
+
+    <!-- Best odds highlight -->
+    <div class="best-odds-row">
+      <div class="best-odd-card">
+        <span class="best-odd-label">{{ home.name }} Win</span>
+        <span class="best-odd-val">{{ odds.best.home }}</span>
+        <span class="best-odd-prob">Implied: {{ implied_probability(odds.best.home) }}%</span>
+      </div>
+      <div class="best-odd-card">
+        <span class="best-odd-label">Draw</span>
+        <span class="best-odd-val">{{ odds.best.draw }}</span>
+        <span class="best-odd-prob">Implied: {{ implied_probability(odds.best.draw) }}%</span>
+      </div>
+      <div class="best-odd-card">
+        <span class="best-odd-label">{{ away.name }} Win</span>
+        <span class="best-odd-val">{{ odds.best.away }}</span>
+        <span class="best-odd-prob">Implied: {{ implied_probability(odds.best.away) }}%</span>
+      </div>
+    </div>
+
+    <!-- Full table -->
+    <div class="odds-table-wrap">
+      <table class="odds-table">
+        <thead>
+          <tr>
+            <th>Bookmaker</th>
+            <th>{{ home.name }}</th>
+            <th>Draw</th>
+            <th>{{ away.name }}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for bk in odds.bookmakers %}
+          <tr>
+            <td class="bk-name">{{ bk.bookmaker }}</td>
+            <td class="{% if bk.home == odds.best.home %}odds-best{% endif %}">
+              {{ bk.home }}
+            </td>
+            <td class="{% if bk.draw == odds.best.draw %}odds-best{% endif %}">
+              {{ bk.draw }}
+            </td>
+            <td class="{% if bk.away == odds.best.away %}odds-best{% endif %}">
+              {{ bk.away }}
+            </td>
+            <td>
+              <span class="bet-btn" title="Affiliate link coming soon">Bet Now ↗</span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="odds-note">Odds shown are decimal. Best odds highlighted in green. 18+.</p>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
