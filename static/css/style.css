@@ -94,6 +94,26 @@ img { display: inline-block; }
 
 .coming-soon { opacity: 0.6; cursor: default; }
 
+/* Acca nav badge */
+.acca-nav-link { position: relative; }
+.acca-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  color: #000;
+  font-size: 0.65rem;
+  font-weight: 800;
+  border-radius: 50px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  margin-left: 4px;
+  vertical-align: middle;
+  transition: transform 0.2s;
+}
+.acca-nav-link:hover .acca-badge { transform: scale(1.1); }
+
 .badge {
   display: inline-block;
   font-size: 0.65rem;
@@ -817,6 +837,315 @@ img { display: inline-block; }
   text-align: center;
 }
 
+/* ── Add to Acca button (match page) ─────────────── */
+
+.check-result-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.add-to-acca-btn {
+  background: var(--bg-card2);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  color: var(--accent);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.add-to-acca-btn:hover { background: var(--accent); color: #000; }
+
+.add-to-acca-btn.in-acca {
+  background: rgba(0,212,170,0.15);
+  border-color: var(--accent);
+  color: var(--accent);
+  cursor: default;
+}
+
+/* ── Acca page ───────────────────────────────────── */
+
+.acca-page-header {
+  padding: 2rem 0 1.5rem;
+}
+
+.acca-page-header h1 {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.acca-page-sub {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-top: 0.4rem;
+}
+
+/* Empty state */
+.acca-empty {
+  text-align: center;
+  padding: 4rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin-bottom: 1.25rem;
+}
+
+.acca-empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+.acca-empty h3   { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
+.acca-empty p    { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+/* Leg cards */
+.acca-legs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.acca-leg-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: border-color 0.2s;
+}
+
+.acca-leg-card:hover { border-color: var(--accent); }
+
+.acca-leg-top {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.acca-leg-num {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  flex: 1;
+}
+
+.sgm-tag {
+  font-size: 0.65rem;
+  font-weight: 800;
+  background: var(--gold);
+  color: #000;
+  padding: 2px 7px;
+  border-radius: 50px;
+  text-transform: uppercase;
+}
+
+.acca-remove-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.75rem;
+  padding: 3px 8px;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.acca-remove-btn:hover { border-color: var(--loss); color: var(--loss); }
+
+.acca-leg-match {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.acca-leg-meta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.acca-leg-bet-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 0.25rem;
+}
+
+.acca-leg-market {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.acca-leg-odds {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.acca-leg-verdict {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 50px;
+}
+
+.leg-value    { background: rgba(34,197,94,0.15);  color: var(--win); }
+.leg-no-value { background: rgba(239,68,68,0.12);  color: var(--loss); }
+
+.acca-leg-probs {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Add more button */
+.acca-add-more-btn {
+  display: inline-block;
+  background: var(--bg-card);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.85rem 1.5rem;
+  text-align: center;
+  transition: border-color 0.2s, color 0.2s;
+  width: 100%;
+  margin-bottom: 1.25rem;
+}
+
+.acca-add-more-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Stats card */
+.acca-stats-card {
+  background: var(--bg-card);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.acca-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.acca-stat-box {
+  background: var(--bg-card2);
+  border-radius: var(--radius);
+  padding: 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.acca-stat-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.acca-stat-val   { font-size: 1.5rem; font-weight: 800; }
+.accent-val      { color: var(--accent); }
+.all-value       { color: var(--win); }
+
+/* EV block */
+.acca-ev-block {
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.ev-pos { background: rgba(34,197,94,0.08);  border: 1px solid var(--win); }
+.ev-neg { background: rgba(239,68,68,0.08);  border: 1px solid var(--loss); }
+
+.acca-ev-label  { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+.acca-ev-amount { font-size: 2rem; font-weight: 800; }
+.ev-pos .acca-ev-amount { color: var(--win); }
+.ev-neg .acca-ev-amount { color: var(--loss); }
+.acca-ev-pct    { font-size: 0.85rem; color: var(--text-muted); }
+
+/* Verdict banner */
+.acca-verdict-banner {
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.verdict-pos { background: rgba(34,197,94,0.12);  color: var(--win); }
+.verdict-neg { background: rgba(239,68,68,0.1);   color: var(--loss); }
+
+.acca-sgm-note {
+  font-size: 0.8rem;
+  color: var(--gold);
+  background: rgba(245,158,11,0.08);
+  border-radius: var(--radius);
+  padding: 0.6rem 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.acca-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.acca-browse-btn {
+  display: inline-block;
+  background: var(--accent);
+  border-radius: var(--radius);
+  color: #000;
+  font-size: 0.875rem;
+  font-weight: 700;
+  padding: 0.6rem 1.25rem;
+  transition: background 0.2s;
+}
+
+.acca-browse-btn:hover { background: var(--accent-dim); }
+
+.acca-clear-btn {
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.6rem 1.25rem;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.acca-clear-btn:hover { border-color: var(--loss); color: var(--loss); }
+
+.acca-disclaimer {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 1rem 0 2rem;
+}
+
 /* ── Footer ──────────────────────────────────────── */
 
 .footer {
@@ -839,4 +1168,6 @@ img { display: inline-block; }
   .h2h-summary { flex-direction: column; }
   .prob-item { grid-template-columns: 100px 1fr 35px; }
   .nav .upload-btn { display: none; }
+  .acca-stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .check-result-footer { flex-direction: column; align-items: flex-start; }
 }

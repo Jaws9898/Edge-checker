@@ -145,6 +145,39 @@
       over25: "Over 2.5 Goals"
     };
 
+  /* Match metadata for the acca */
+  var FIXTURE_ID   = {{ fixture.fixture.id }};
+  var MATCH_NAME   = "{{ home.name }} vs {{ away.name }}";
+  var MATCH_LEAGUE = "{{ leagues[league_id].name }}";
+  var MATCH_DATE   = "{{ fixture.fixture.date[:10] }}";
+
+  function buildAddBtn(market, marketLabel, odds, ourPct) {
+    var inAcca = window.Acca && window.Acca.has(FIXTURE_ID, market);
+    return '<button class="add-to-acca-btn ' + (inAcca ? 'in-acca' : '') + '" ' +
+      'onclick="addLegToAcca(\'' + market + '\',\'' + marketLabel.replace(/'/g,"&#39;") + '\',' + odds + ',' + ourPct + ')">' +
+      (inAcca ? '✓ In Acca' : '+ Add to Acca') +
+    '</button>';
+  }
+
+  window.addLegToAcca = function (market, marketLabel, odds, ourPct) {
+    if (!window.Acca) return;
+    window.Acca.add({
+      fixtureId:   FIXTURE_ID,
+      matchName:   MATCH_NAME,
+      league:      MATCH_LEAGUE,
+      date:        MATCH_DATE,
+      market:      market,
+      marketLabel: marketLabel,
+      odds:        odds,
+      ourPct:      ourPct
+    });
+    /* Update button text */
+    document.querySelectorAll('.add-to-acca-btn').forEach(function (b) {
+      b.textContent = '✓ In Acca';
+      b.classList.add('in-acca');
+    });
+  };
+
     document.getElementById("check-btn").addEventListener("click", function () {
       var market  = document.getElementById("bet-market").value;
       var raw     = document.getElementById("bet-odds").value;
@@ -185,7 +218,10 @@
               '<span class="check-detail-val">+' + edge + '%</span>' +
             '</div>' +
           '</div>' +
-          '<div class="check-rating">' + rating + '</div>';
+          '<div class="check-result-footer">' +
+            '<div class="check-rating">' + rating + '</div>' +
+            buildAddBtn(market, label, odds, ourProb) +
+          '</div>';
       } else {
         result.className = "check-result check-no-value";
         result.innerHTML =
@@ -205,7 +241,10 @@
               '<span class="check-detail-val">' + Math.abs(edge) + '%</span>' +
             '</div>' +
           '</div>' +
-          '<div class="check-tip">The bookmaker has a ' + Math.abs(edge) + '% edge on this market.</div>';
+          '<div class="check-result-footer">' +
+            '<div class="check-tip">The bookmaker has a ' + Math.abs(edge) + '% edge on this market.</div>' +
+            buildAddBtn(market, label, odds, ourProb) +
+          '</div>';
       }
     });
   }());

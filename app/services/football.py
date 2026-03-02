@@ -13,12 +13,13 @@ LEAGUES = {
 }
 
 DEMO_FIXTURES = [
+    # ── Premier League ──────────────────────────────────────────────────
     {
         "fixture": {"id": 1001, "date": "2026-03-08T15:00:00+00:00", "venue": {"name": "Emirates Stadium"}},
         "league": {"id": 39, "name": "Premier League", "round": "Round 29"},
         "teams": {
-            "home": {"id": 33, "name": "Arsenal",          "logo": "https://media.api-sports.io/football/teams/33.png",  "winner": None},
-            "away": {"id": 49, "name": "Chelsea",          "logo": "https://media.api-sports.io/football/teams/49.png",  "winner": None},
+            "home": {"id": 42, "name": "Arsenal",         "logo": "https://media.api-sports.io/football/teams/42.png", "winner": None},
+            "away": {"id": 49, "name": "Chelsea",         "logo": "https://media.api-sports.io/football/teams/49.png", "winner": None},
         },
         "goals": {"home": None, "away": None},
     },
@@ -26,8 +27,8 @@ DEMO_FIXTURES = [
         "fixture": {"id": 1002, "date": "2026-03-08T17:30:00+00:00", "venue": {"name": "Anfield"}},
         "league": {"id": 39, "name": "Premier League", "round": "Round 29"},
         "teams": {
-            "home": {"id": 40, "name": "Liverpool",        "logo": "https://media.api-sports.io/football/teams/40.png",  "winner": None},
-            "away": {"id": 50, "name": "Manchester City",  "logo": "https://media.api-sports.io/football/teams/50.png",  "winner": None},
+            "home": {"id": 40, "name": "Liverpool",       "logo": "https://media.api-sports.io/football/teams/40.png", "winner": None},
+            "away": {"id": 50, "name": "Manchester City", "logo": "https://media.api-sports.io/football/teams/50.png", "winner": None},
         },
         "goals": {"home": None, "away": None},
     },
@@ -36,61 +37,142 @@ DEMO_FIXTURES = [
         "league": {"id": 39, "name": "Premier League", "round": "Round 29"},
         "teams": {
             "home": {"id": 33, "name": "Manchester United", "logo": "https://media.api-sports.io/football/teams/33.png", "winner": None},
-            "away": {"id": 47,  "name": "Tottenham",        "logo": "https://media.api-sports.io/football/teams/47.png", "winner": None},
+            "away": {"id": 47, "name": "Tottenham",          "logo": "https://media.api-sports.io/football/teams/47.png", "winner": None},
         },
         "goals": {"home": None, "away": None},
     },
+    {
+        "fixture": {"id": 1007, "date": "2026-03-07T12:30:00+00:00", "venue": {"name": "St. James' Park"}},
+        "league": {"id": 39, "name": "Premier League", "round": "Round 29"},
+        "teams": {
+            "home": {"id": 34, "name": "Newcastle",       "logo": "https://media.api-sports.io/football/teams/34.png", "winner": None},
+            "away": {"id": 48, "name": "West Ham",        "logo": "https://media.api-sports.io/football/teams/48.png", "winner": None},
+        },
+        "goals": {"home": None, "away": None},
+    },
+    # ── La Liga ─────────────────────────────────────────────────────────
     {
         "fixture": {"id": 1004, "date": "2026-03-07T20:00:00+00:00", "venue": {"name": "Santiago Bernabéu"}},
         "league": {"id": 140, "name": "La Liga", "round": "Round 27"},
         "teams": {
-            "home": {"id": 541, "name": "Real Madrid",     "logo": "https://media.api-sports.io/football/teams/541.png", "winner": None},
-            "away": {"id": 529, "name": "Barcelona",       "logo": "https://media.api-sports.io/football/teams/529.png", "winner": None},
+            "home": {"id": 541, "name": "Real Madrid",    "logo": "https://media.api-sports.io/football/teams/541.png", "winner": None},
+            "away": {"id": 529, "name": "Barcelona",      "logo": "https://media.api-sports.io/football/teams/529.png", "winner": None},
         },
         "goals": {"home": None, "away": None},
     },
+    {
+        "fixture": {"id": 1008, "date": "2026-03-08T19:00:00+00:00", "venue": {"name": "Metropolitano"}},
+        "league": {"id": 140, "name": "La Liga", "round": "Round 27"},
+        "teams": {
+            "home": {"id": 530, "name": "Atletico Madrid", "logo": "https://media.api-sports.io/football/teams/530.png", "winner": None},
+            "away": {"id": 532, "name": "Valencia",         "logo": "https://media.api-sports.io/football/teams/532.png", "winner": None},
+        },
+        "goals": {"home": None, "away": None},
+    },
+    # ── Bundesliga ──────────────────────────────────────────────────────
     {
         "fixture": {"id": 1005, "date": "2026-03-07T19:30:00+00:00", "venue": {"name": "Allianz Arena"}},
         "league": {"id": 78, "name": "Bundesliga", "round": "Round 25"},
         "teams": {
-            "home": {"id": 157, "name": "Bayern Munich",   "logo": "https://media.api-sports.io/football/teams/157.png", "winner": None},
-            "away": {"id": 165, "name": "Borussia Dortmund","logo": "https://media.api-sports.io/football/teams/165.png","winner": None},
+            "home": {"id": 157, "name": "Bayern Munich",      "logo": "https://media.api-sports.io/football/teams/157.png", "winner": None},
+            "away": {"id": 165, "name": "Borussia Dortmund",  "logo": "https://media.api-sports.io/football/teams/165.png", "winner": None},
         },
         "goals": {"home": None, "away": None},
     },
     {
+        "fixture": {"id": 1009, "date": "2026-03-08T17:30:00+00:00", "venue": {"name": "BayArena"}},
+        "league": {"id": 78, "name": "Bundesliga", "round": "Round 25"},
+        "teams": {
+            "home": {"id": 168, "name": "Bayer Leverkusen", "logo": "https://media.api-sports.io/football/teams/168.png", "winner": None},
+            "away": {"id": 173, "name": "RB Leipzig",        "logo": "https://media.api-sports.io/football/teams/173.png", "winner": None},
+        },
+        "goals": {"home": None, "away": None},
+    },
+    # ── Serie A ─────────────────────────────────────────────────────────
+    {
         "fixture": {"id": 1006, "date": "2026-03-08T19:45:00+00:00", "venue": {"name": "San Siro"}},
         "league": {"id": 135, "name": "Serie A", "round": "Round 27"},
         "teams": {
-            "home": {"id": 489, "name": "AC Milan",        "logo": "https://media.api-sports.io/football/teams/489.png", "winner": None},
-            "away": {"id": 505, "name": "Inter",           "logo": "https://media.api-sports.io/football/teams/505.png", "winner": None},
+            "home": {"id": 489, "name": "AC Milan", "logo": "https://media.api-sports.io/football/teams/489.png", "winner": None},
+            "away": {"id": 505, "name": "Inter",    "logo": "https://media.api-sports.io/football/teams/505.png", "winner": None},
+        },
+        "goals": {"home": None, "away": None},
+    },
+    {
+        "fixture": {"id": 1010, "date": "2026-03-09T19:45:00+00:00", "venue": {"name": "Juventus Stadium"}},
+        "league": {"id": 135, "name": "Serie A", "round": "Round 27"},
+        "teams": {
+            "home": {"id": 496, "name": "Juventus", "logo": "https://media.api-sports.io/football/teams/496.png", "winner": None},
+            "away": {"id": 492, "name": "Napoli",   "logo": "https://media.api-sports.io/football/teams/492.png", "winner": None},
+        },
+        "goals": {"home": None, "away": None},
+    },
+    # ── Ligue 1 ─────────────────────────────────────────────────────────
+    {
+        "fixture": {"id": 1011, "date": "2026-03-08T20:00:00+00:00", "venue": {"name": "Parc des Princes"}},
+        "league": {"id": 61, "name": "Ligue 1", "round": "Round 26"},
+        "teams": {
+            "home": {"id": 85, "name": "Paris Saint-Germain", "logo": "https://media.api-sports.io/football/teams/85.png", "winner": None},
+            "away": {"id": 80, "name": "Lyon",                 "logo": "https://media.api-sports.io/football/teams/80.png", "winner": None},
+        },
+        "goals": {"home": None, "away": None},
+    },
+    {
+        "fixture": {"id": 1012, "date": "2026-03-09T19:00:00+00:00", "venue": {"name": "Stade Vélodrome"}},
+        "league": {"id": 61, "name": "Ligue 1", "round": "Round 26"},
+        "teams": {
+            "home": {"id": 81, "name": "Marseille", "logo": "https://media.api-sports.io/football/teams/81.png", "winner": None},
+            "away": {"id": 79, "name": "Lille",     "logo": "https://media.api-sports.io/football/teams/79.png", "winner": None},
         },
         "goals": {"home": None, "away": None},
     },
 ]
 
 DEMO_FORM = {
-    "Arsenal":           [("W", 3, 1), ("W", 2, 0), ("D", 1, 1), ("W", 1, 0), ("L", 0, 2)],
-    "Chelsea":           [("W", 2, 1), ("L", 0, 1), ("W", 3, 0), ("D", 2, 2), ("W", 1, 0)],
-    "Liverpool":         [("W", 2, 0), ("W", 3, 1), ("W", 2, 1), ("D", 1, 1), ("W", 4, 0)],
-    "Manchester City":   [("W", 3, 0), ("W", 2, 1), ("L", 1, 2), ("W", 3, 1), ("D", 2, 2)],
-    "Manchester United": [("L", 0, 2), ("D", 1, 1), ("W", 2, 0), ("L", 1, 3), ("D", 0, 0)],
-    "Tottenham":         [("W", 2, 1), ("W", 1, 0), ("L", 0, 2), ("W", 3, 2), ("D", 1, 1)],
-    "Real Madrid":       [("W", 4, 1), ("W", 2, 0), ("W", 3, 0), ("D", 1, 1), ("W", 2, 1)],
-    "Barcelona":         [("W", 3, 1), ("D", 2, 2), ("W", 2, 0), ("W", 3, 1), ("L", 0, 1)],
-    "Bayern Munich":     [("W", 3, 0), ("W", 4, 1), ("W", 2, 1), ("D", 2, 2), ("W", 3, 0)],
-    "Borussia Dortmund": [("D", 1, 1), ("W", 2, 1), ("L", 0, 1), ("W", 3, 0), ("W", 2, 0)],
-    "AC Milan":          [("W", 2, 1), ("D", 0, 0), ("W", 1, 0), ("L", 1, 2), ("W", 3, 1)],
-    "Inter":             [("W", 3, 0), ("W", 2, 1), ("D", 1, 1), ("W", 2, 0), ("W", 3, 1)],
+    # Premier League
+    "Arsenal":             [("W", 3, 1), ("W", 2, 0), ("D", 1, 1), ("W", 1, 0), ("L", 0, 2)],
+    "Chelsea":             [("W", 2, 1), ("L", 0, 1), ("W", 3, 0), ("D", 2, 2), ("W", 1, 0)],
+    "Liverpool":           [("W", 2, 0), ("W", 3, 1), ("W", 2, 1), ("D", 1, 1), ("W", 4, 0)],
+    "Manchester City":     [("W", 3, 0), ("W", 2, 1), ("L", 1, 2), ("W", 3, 1), ("D", 2, 2)],
+    "Manchester United":   [("L", 0, 2), ("D", 1, 1), ("W", 2, 0), ("L", 1, 3), ("D", 0, 0)],
+    "Tottenham":           [("W", 2, 1), ("W", 1, 0), ("L", 0, 2), ("W", 3, 2), ("D", 1, 1)],
+    "Newcastle":           [("W", 1, 0), ("D", 2, 2), ("W", 2, 1), ("W", 3, 0), ("L", 0, 1)],
+    "West Ham":            [("L", 0, 2), ("D", 1, 1), ("L", 1, 3), ("W", 2, 0), ("D", 0, 0)],
+    # La Liga
+    "Real Madrid":         [("W", 4, 1), ("W", 2, 0), ("W", 3, 0), ("D", 1, 1), ("W", 2, 1)],
+    "Barcelona":           [("W", 3, 1), ("D", 2, 2), ("W", 2, 0), ("W", 3, 1), ("L", 0, 1)],
+    "Atletico Madrid":     [("W", 1, 0), ("D", 0, 0), ("W", 2, 1), ("L", 0, 1), ("W", 1, 0)],
+    "Valencia":            [("L", 0, 2), ("D", 1, 1), ("L", 1, 2), ("W", 2, 0), ("D", 0, 0)],
+    # Bundesliga
+    "Bayern Munich":       [("W", 3, 0), ("W", 4, 1), ("W", 2, 1), ("D", 2, 2), ("W", 3, 0)],
+    "Borussia Dortmund":   [("D", 1, 1), ("W", 2, 1), ("L", 0, 1), ("W", 3, 0), ("W", 2, 0)],
+    "Bayer Leverkusen":    [("W", 2, 1), ("W", 3, 0), ("D", 1, 1), ("W", 2, 0), ("L", 0, 1)],
+    "RB Leipzig":          [("W", 2, 1), ("L", 1, 2), ("W", 3, 1), ("D", 0, 0), ("W", 2, 0)],
+    # Serie A
+    "AC Milan":            [("W", 2, 1), ("D", 0, 0), ("W", 1, 0), ("L", 1, 2), ("W", 3, 1)],
+    "Inter":               [("W", 3, 0), ("W", 2, 1), ("D", 1, 1), ("W", 2, 0), ("W", 3, 1)],
+    "Juventus":            [("W", 1, 0), ("D", 1, 1), ("W", 2, 0), ("L", 0, 1), ("W", 2, 1)],
+    "Napoli":              [("W", 3, 1), ("W", 2, 0), ("D", 1, 1), ("L", 0, 2), ("W", 1, 0)],
+    # Ligue 1
+    "Paris Saint-Germain": [("W", 4, 0), ("W", 3, 1), ("W", 2, 0), ("W", 5, 1), ("W", 2, 0)],
+    "Lyon":                [("D", 1, 1), ("W", 2, 0), ("L", 0, 2), ("D", 0, 0), ("W", 1, 0)],
+    "Marseille":           [("W", 2, 1), ("D", 1, 1), ("W", 3, 0), ("L", 1, 2), ("W", 2, 0)],
+    "Lille":               [("W", 1, 0), ("W", 2, 1), ("D", 0, 0), ("L", 0, 1), ("W", 2, 0)],
 }
 
 DEMO_H2H = {
-    (33, 49):   {"home_wins": 4, "draws": 3, "away_wins": 3, "recent": [("W", 2, 1), ("D", 1, 1), ("L", 0, 2), ("W", 3, 0), ("D", 2, 2)]},
+    (42, 49):   {"home_wins": 4, "draws": 3, "away_wins": 3, "recent": [("W", 2, 1), ("D", 1, 1), ("L", 0, 2), ("W", 3, 0), ("D", 2, 2)]},
     (40, 50):   {"home_wins": 3, "draws": 2, "away_wins": 5, "recent": [("L", 1, 2), ("W", 3, 1), ("L", 0, 1), ("W", 2, 0), ("L", 1, 3)]},
     (33, 47):   {"home_wins": 6, "draws": 2, "away_wins": 2, "recent": [("W", 2, 0), ("W", 1, 0), ("D", 1, 1), ("W", 3, 1), ("L", 0, 2)]},
+    (34, 48):   {"home_wins": 5, "draws": 2, "away_wins": 3, "recent": [("W", 2, 0), ("D", 1, 1), ("W", 3, 1), ("L", 0, 2), ("W", 1, 0)]},
     (541, 529): {"home_wins": 5, "draws": 2, "away_wins": 3, "recent": [("W", 3, 1), ("L", 0, 2), ("W", 2, 1), ("D", 2, 2), ("W", 1, 0)]},
+    (530, 532): {"home_wins": 6, "draws": 2, "away_wins": 2, "recent": [("W", 1, 0), ("D", 0, 0), ("W", 2, 1), ("W", 1, 0), ("L", 0, 1)]},
     (157, 165): {"home_wins": 7, "draws": 1, "away_wins": 2, "recent": [("W", 3, 0), ("W", 2, 1), ("L", 1, 2), ("W", 4, 0), ("W", 2, 0)]},
+    (168, 173): {"home_wins": 4, "draws": 3, "away_wins": 3, "recent": [("W", 2, 1), ("D", 1, 1), ("L", 0, 1), ("W", 3, 2), ("D", 0, 0)]},
     (489, 505): {"home_wins": 3, "draws": 4, "away_wins": 3, "recent": [("D", 1, 1), ("L", 0, 1), ("W", 2, 0), ("D", 2, 2), ("W", 1, 0)]},
+    (496, 492): {"home_wins": 4, "draws": 3, "away_wins": 3, "recent": [("W", 1, 0), ("D", 1, 1), ("L", 0, 2), ("W", 2, 1), ("D", 0, 0)]},
+    (85, 80):   {"home_wins": 8, "draws": 1, "away_wins": 1, "recent": [("W", 3, 0), ("W", 4, 1), ("W", 2, 0), ("D", 1, 1), ("W", 5, 0)]},
+    (81, 79):   {"home_wins": 4, "draws": 3, "away_wins": 3, "recent": [("W", 2, 1), ("D", 1, 1), ("L", 0, 1), ("W", 2, 0), ("D", 0, 0)]},
 }
 
 

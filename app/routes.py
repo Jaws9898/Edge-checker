@@ -15,6 +15,11 @@ def health():
     return jsonify({"status": "ok"}), 200
 
 
+@main.route("/acca")
+def acca():
+    return render_template("acca.html", leagues=LEAGUES, demo_mode=_football.demo_mode)
+
+
 @main.route("/")
 def index():
     try:
