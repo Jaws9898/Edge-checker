@@ -9,6 +9,11 @@ _football = FootballService()
 _odds = OddsService()
 
 
+@main.route("/health")
+def health():
+    return jsonify({"status": "ok"}), 200
+
+
 @main.route("/")
 def index():
     try:
