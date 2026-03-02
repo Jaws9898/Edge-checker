@@ -1,3 +1,4 @@
+import math
 from flask import Blueprint, render_template, request, jsonify
 
 from .services.football import FootballService, LEAGUES, form_stats
@@ -105,14 +106,16 @@ def _build_verdict(home_name, away_name, hs, aws, h2h, odds) -> dict:
         tip = "Draw"
         tip_confidence = "Medium"
 
-    # BTTS assessment
-    avg_gf = (hs["avg_gf"] + aws["avg_gf"]) / 2
-    avg_ga = (hs["avg_ga"] + aws["avg_ga"]) / 2
-    btts_likely = avg_gf >= 1.2 and avg_ga >= 0.8
+    # Poisson-based BTTS probability: P(home scores) × P(away scores)
+    h_lam = max(hs["avg_gf"], 0.1)
+    a_lam = max(aws["avg_gf"], 0.1)
+    btts_pct = round((1 - math.exp(-h_lam)) * (1 - math.exp(-a_lam)) * 100)
+    btts_likely = btts_pct >= 50
 
-    # Over 2.5 assessment
-    avg_goals = hs["avg_gf"] + aws["avg_gf"]
-    over25_likely = avg_goals >= 2.5
+    # Poisson-based Over 2.5: P(X+Y >= 3) where X+Y ~ Poisson(total)
+    total_lam = h_lam + a_lam
+    over25_pct = round((1 - math.exp(-total_lam) * (1 + total_lam + total_lam ** 2 / 2)) * 100)
+    over25_likely = over25_pct >= 50
 
     # Value check vs implied odds probability
     best_home_odds = odds["best"]["home"] if odds else None
@@ -129,6 +132,8 @@ def _build_verdict(home_name, away_name, hs, aws, h2h, odds) -> dict:
         "tip": tip,
         "tip_confidence": tip_confidence,
         "btts_likely": btts_likely,
+        "btts_pct": btts_pct,
         "over25_likely": over25_likely,
+        "over25_pct": over25_pct,
         "value_tip": value_tip,
     }

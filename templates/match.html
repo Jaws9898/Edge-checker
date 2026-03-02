@@ -106,6 +106,111 @@
     <p class="verdict-disclaimer">Based on last 5 results + head-to-head. Not financial advice.</p>
   </div>
 
+  <!-- Check Your Bet -->
+  <div class="check-bet-section">
+    <h3 class="section-title">🎯 Check Your Bet</h3>
+    <p class="check-bet-sub">Enter the odds you've been offered — we'll tell you if there's value based on our model.</p>
+    <div class="check-bet-form">
+      <div class="check-bet-row">
+        <select id="bet-market" class="check-select">
+          <option value="home">{{ home.name }} Win</option>
+          <option value="draw">Draw</option>
+          <option value="away">{{ away.name }} Win</option>
+          <option value="btts">Both Teams to Score</option>
+          <option value="over25">Over 2.5 Goals</option>
+        </select>
+        <input type="number" id="bet-odds" class="check-input"
+               step="0.01" min="1.01" max="100"
+               placeholder="Decimal odds e.g. 2.50" />
+        <button id="check-btn" class="check-btn">Check Value ⚡</button>
+      </div>
+      <div id="check-result" class="check-result" style="display:none"></div>
+    </div>
+  </div>
+
+  <script>
+  (function () {
+    var probs = {
+      home:   {{ verdict.home_pct }},
+      draw:   {{ verdict.draw_pct }},
+      away:   {{ verdict.away_pct }},
+      btts:   {{ verdict.btts_pct }},
+      over25: {{ verdict.over25_pct }}
+    };
+    var labels = {
+      home:   "{{ home.name }} Win",
+      draw:   "Draw",
+      away:   "{{ away.name }} Win",
+      btts:   "Both Teams to Score",
+      over25: "Over 2.5 Goals"
+    };
+
+    document.getElementById("check-btn").addEventListener("click", function () {
+      var market  = document.getElementById("bet-market").value;
+      var raw     = document.getElementById("bet-odds").value;
+      var odds    = parseFloat(raw);
+      var result  = document.getElementById("check-result");
+
+      if (!raw || isNaN(odds) || odds < 1.01) {
+        result.style.display = "block";
+        result.className = "check-result check-error";
+        result.innerHTML = "<span>Please enter valid decimal odds (e.g. 2.50)</span>";
+        return;
+      }
+
+      var ourProb     = probs[market];
+      var impliedProb = parseFloat((100 / odds).toFixed(1));
+      var edge        = parseFloat((ourProb - impliedProb).toFixed(1));
+      var label       = labels[market];
+
+      result.style.display = "block";
+
+      if (edge > 0) {
+        var rating = edge >= 10 ? "Strong Edge" : edge >= 5 ? "Good Edge" : "Marginal Edge";
+        result.className = "check-result check-value";
+        result.innerHTML =
+          '<div class="check-verdict-badge value-badge">✓ VALUE BET</div>' +
+          '<div class="check-market-label">' + label + ' @ ' + odds + '</div>' +
+          '<div class="check-details">' +
+            '<div class="check-detail-item">' +
+              '<span class="check-detail-label">Our probability</span>' +
+              '<span class="check-detail-val">' + ourProb + '%</span>' +
+            '</div>' +
+            '<div class="check-detail-item">' +
+              '<span class="check-detail-label">Bookmaker implied</span>' +
+              '<span class="check-detail-val">' + impliedProb + '%</span>' +
+            '</div>' +
+            '<div class="check-detail-item edge-positive">' +
+              '<span class="check-detail-label">Your edge</span>' +
+              '<span class="check-detail-val">+' + edge + '%</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="check-rating">' + rating + '</div>';
+      } else {
+        result.className = "check-result check-no-value";
+        result.innerHTML =
+          '<div class="check-verdict-badge no-value-badge">✗ NO VALUE</div>' +
+          '<div class="check-market-label">' + label + ' @ ' + odds + '</div>' +
+          '<div class="check-details">' +
+            '<div class="check-detail-item">' +
+              '<span class="check-detail-label">Our probability</span>' +
+              '<span class="check-detail-val">' + ourProb + '%</span>' +
+            '</div>' +
+            '<div class="check-detail-item">' +
+              '<span class="check-detail-label">Bookmaker implied</span>' +
+              '<span class="check-detail-val">' + impliedProb + '%</span>' +
+            '</div>' +
+            '<div class="check-detail-item edge-negative">' +
+              '<span class="check-detail-label">Bookie edge</span>' +
+              '<span class="check-detail-val">' + Math.abs(edge) + '%</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="check-tip">The bookmaker has a ' + Math.abs(edge) + '% edge on this market.</div>';
+      }
+    });
+  }());
+  </script>
+
   <!-- Stats comparison -->
   <div class="stats-section">
     <h3 class="section-title">📊 Form &amp; Stats (Last 5)</h3>
