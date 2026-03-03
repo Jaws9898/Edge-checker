@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% block title %}Edge Checker — Upcoming Fixtures{% endblock %}
+{% block title %}Edge Checker — Fixtures{% endblock %}
 
 {% block content %}
 <div class="container">
 
-  <div class="hero">
-    <h1>Find the <span class="accent">Edge</span> in Every Bet</h1>
-    <p class="hero-sub">Stats-powered value finder. Add legs to your acca in one click.</p>
+  <div class="page-header">
+    <h1 class="page-title">Fixtures</h1>
+    <span class="page-sub">Stats-powered edge finder. Add legs to your acca in one click.</span>
   </div>
 
   <!-- League tabs -->
@@ -36,6 +36,7 @@
       <!-- Top meta row -->
       <div class="fc-meta">
         <span class="fc-league">{{ f.league.name }}</span>
+        <span class="fc-dot">·</span>
         <span class="fc-round">{{ f.league.round }}</span>
         <span class="fc-time">{{ dt[8:10] }}/{{ dt[5:7] }} {{ dt[11:16] }}</span>
       </div>
@@ -54,7 +55,7 @@
         </div>
 
         <div class="fc-vs">
-          <span class="fc-vs-label">VS</span>
+          <span class="fc-vs-label">vs</span>
         </div>
 
         <div class="fc-team fc-team-away">
@@ -85,19 +86,19 @@
 
       <!-- Verdict row -->
       <div class="fc-verdict-row">
-        <span class="fc-tip">⚡ {{ verdict.tip }}</span>
+        <span class="fc-tip"><span class="fc-tip-highlight">{{ verdict.tip }}</span></span>
         <span class="fc-conf confidence-{{ verdict.tip_confidence | lower }}">{{ verdict.tip_confidence }}</span>
         {% if verdict.btts_likely %}
-        <span class="fc-tag fc-btts">BTTS ✓</span>
+        <span class="fc-tag fc-btts">BTTS</span>
         {% endif %}
         {% if verdict.over25_likely %}
-        <span class="fc-tag fc-o25">O2.5 ✓</span>
+        <span class="fc-tag fc-o25">O2.5</span>
         {% endif %}
       </div>
 
       <!-- Quick-add market buttons -->
       <div class="fc-markets" onclick="event.stopPropagation()">
-        <span class="fc-markets-lbl">Quick Add:</span>
+        <span class="fc-markets-lbl">Quick Add</span>
         <div class="fc-mkt-row">
           {% if odds and odds.best.home %}
           <button class="mkt-btn"
@@ -110,7 +111,7 @@
             data-odds="{{ odds.best.home }}"
             data-pct="{{ verdict.home_pct }}"
             onclick="event.preventDefault(); quickAcca(this)">
-            <span class="mkt-name">{{ home.name | truncate(9, True, '') }} Win</span>
+            <span class="mkt-name">{{ home.name | truncate(9, True, '') }}</span>
             <span class="mkt-odds">{{ odds.best.home }}</span>
           </button>
           {% endif %}
@@ -142,7 +143,7 @@
             data-odds="{{ odds.best.away }}"
             data-pct="{{ verdict.away_pct }}"
             onclick="event.preventDefault(); quickAcca(this)">
-            <span class="mkt-name">{{ away.name | truncate(9, True, '') }} Win</span>
+            <span class="mkt-name">{{ away.name | truncate(9, True, '') }}</span>
             <span class="mkt-odds">{{ odds.best.away }}</span>
           </button>
           {% endif %}
@@ -183,8 +184,8 @@
 
       <!-- Card footer -->
       <div class="fc-footer">
-        <span class="fc-venue">📍 {{ f.fixture.venue.name if f.fixture.venue else "" }}</span>
-        <span class="fc-analysis-link">Full Analysis →</span>
+        <span class="fc-venue">{{ f.fixture.venue.name if f.fixture.venue else "" }}</span>
+        <span class="fc-analysis-link">Full analysis →</span>
       </div>
 
     </a>
@@ -200,7 +201,6 @@
 </div>
 
 <script>
-/* Mark already-added market buttons on page load */
 document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('.mkt-btn').forEach(function (btn) {
     var fid    = parseInt(btn.dataset.fid);

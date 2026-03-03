@@ -6,33 +6,35 @@
   <title>{% block title %}Edge Checker{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
 </head>
 <body>
 
   <header class="header">
     <div class="container header-inner">
       <a href="/" class="logo">
-        <span class="logo-icon">⚡</span>
-        <span>Edge<span class="logo-accent">Checker</span></span>
+        <span class="logo-mark">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+          </svg>
+        </span>
+        <span class="logo-text">Edge<span class="logo-accent">Checker</span></span>
       </a>
       <nav class="nav">
         <a href="/" class="nav-link">Fixtures</a>
         <a href="/acca" class="nav-link acca-nav-link" id="acca-nav-link">
-          🎰 My Acca <span class="acca-badge" id="acca-badge" style="display:none">0</span>
+          Acca <span class="acca-badge" id="acca-badge" style="display:none">0</span>
         </a>
-        <label class="upload-btn coming-soon" title="Coming soon">
-          📸 Upload Slip <span class="badge">Soon</span>
-        </label>
+        <span class="coming-soon">
+          Upload Slip <span class="badge-pill">Soon</span>
+        </span>
       </nav>
     </div>
   </header>
 
   {% if demo_mode is defined and demo_mode %}
   <div class="demo-banner">
-    <strong>Demo mode</strong> — Add your API keys to <code>.env</code> for live data.
-    See <a href="https://dashboard.api-sports.io" target="_blank">API-Football</a>
-    and <a href="https://the-odds-api.com" target="_blank">The Odds API</a>.
+    Demo mode — add <code>API_FOOTBALL_KEY</code> and <code>ODDS_API_KEY</code> to <code>.env</code> for live data.
   </div>
   {% endif %}
 
@@ -42,7 +44,7 @@
 
   <footer class="footer">
     <div class="container">
-      <p>Edge Checker &mdash; Bet smarter, not harder. 18+ | Please gamble responsibly.</p>
+      <p>Edge Checker &mdash; Bet smarter. 18+ &nbsp;|&nbsp; Please gamble responsibly.</p>
     </div>
   </footer>
 

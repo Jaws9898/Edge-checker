@@ -5,14 +5,11 @@
 <div class="container">
 
   <div class="acca-page-header">
-    <h1>🎰 My Acca</h1>
+    <h1>My Acca</h1>
     <p class="acca-page-sub">Build your accumulator — check each leg for value, then see your combined edge.</p>
   </div>
 
-  <!-- Legs list — filled by JS -->
   <div id="acca-legs-container"></div>
-
-  <!-- Stats — filled by JS -->
   <div id="acca-stats-container"></div>
 
   <p class="acca-disclaimer">Odds and probabilities are estimates based on recent form and head-to-head data.
@@ -21,7 +18,6 @@
 </div>
 
 <script>
-/* Renders the full acca page from localStorage via Acca.stats() */
 function renderAccaPage() {
   var statsEl = document.getElementById('acca-stats-container');
   var legsEl  = document.getElementById('acca-legs-container');
@@ -34,16 +30,16 @@ function renderAccaPage() {
   if (!legs.length) {
     legsEl.innerHTML =
       '<div class="acca-empty">' +
-        '<div class="acca-empty-icon">📋</div>' +
-        '<h3>Your acca is empty</h3>' +
-        '<p>Browse fixtures, open a match and use <strong>Check Your Bet ⚡</strong> to add legs.</p>' +
-        '<a href="/" class="acca-browse-btn">Browse Fixtures →</a>' +
+        '<div class="acca-empty-icon">—</div>' +
+        '<h3>No legs added yet</h3>' +
+        '<p>Browse fixtures and use Quick Add or Check Your Bet to build your acca.</p>' +
+        '<a href="/" class="acca-browse-btn">Browse Fixtures</a>' +
       '</div>';
     if (statsEl) statsEl.innerHTML = '';
     return;
   }
 
-  /* ── Group legs by fixture for SGM detection ── */
+  /* ── SGM detection ── */
   var gameCount = {};
   for (var i = 0; i < legs.length; i++) {
     gameCount[legs[i].fixtureId] = (gameCount[legs[i].fixtureId] || 0) + 1;
@@ -52,60 +48,56 @@ function renderAccaPage() {
   /* ── Render legs ── */
   var html = '<div class="acca-legs">';
   for (var j = 0; j < legs.length; j++) {
-    var leg       = legs[j];
-    var implied   = Math.round(1000 / leg.odds) / 10;
-    var edge      = Math.round((leg.ourPct - implied) * 10) / 10;
-    var isVal     = edge > 0;
-    var isSgm     = gameCount[leg.fixtureId] > 1;
-    var legNum    = j + 1;
+    var leg     = legs[j];
+    var implied = Math.round(1000 / leg.odds) / 10;
+    var edge    = Math.round((leg.ourPct - implied) * 10) / 10;
+    var isVal   = edge > 0;
+    var isSgm   = gameCount[leg.fixtureId] > 1;
+    var legNum  = j + 1;
 
     html +=
       '<div class="acca-leg-card">' +
         '<div class="acca-leg-top">' +
           '<span class="acca-leg-num">Leg ' + legNum + '</span>' +
           (isSgm ? '<span class="sgm-tag">SGM</span>' : '') +
-          '<button class="acca-remove-btn" onclick="Acca.remove(\'' + leg.id + '\')">✕ Remove</button>' +
+          '<button class="acca-remove-btn" onclick="Acca.remove(\'' + leg.id + '\')">Remove</button>' +
         '</div>' +
         '<div class="acca-leg-match">' + leg.matchName + '</div>' +
-        '<div class="acca-leg-meta">' + leg.league + ' · ' + leg.date + '</div>' +
+        '<div class="acca-leg-meta">' + leg.league + ' &nbsp;·&nbsp; ' + leg.date + '</div>' +
         '<div class="acca-leg-bet-row">' +
           '<span class="acca-leg-market">' + leg.marketLabel + '</span>' +
           '<span class="acca-leg-odds">@ ' + leg.odds + '</span>' +
           '<span class="acca-leg-verdict ' + (isVal ? 'leg-value' : 'leg-no-value') + '">' +
-            (isVal ? '✓ Value +' + edge + '%' : '✗ No value ' + edge + '%') +
+            (isVal ? '+' + edge + '%' : edge + '%') +
           '</span>' +
         '</div>' +
         '<div class="acca-leg-probs">' +
-          'Our prob: <strong>' + leg.ourPct + '%</strong> &nbsp;·&nbsp; ' +
-          'Implied: <strong>' + implied + '%</strong>' +
+          'Our prob: ' + leg.ourPct + '% &nbsp;&nbsp; Implied: ' + implied + '%' +
         '</div>' +
       '</div>';
   }
   html += '</div>';
 
-  /* ── Add another leg CTA ── */
-  html +=
-    '<a href="/" class="acca-add-more-btn">+ Add Another Match</a>';
-
+  html += '<a href="/" class="acca-add-more-btn">+ Add another leg</a>';
   legsEl.innerHTML = html;
 
   /* ── Stats card ── */
-  var evPos      = stats.ev >= 0;
-  var sign       = evPos ? '+' : '';
-  var ret10      = Math.round(stats.combinedOdds * 10 * 10) / 10;
-  var evGbp      = Math.round(Math.abs(stats.ev) * 10) / 100;
-  var hasSgm     = legs.some(function (l) { return gameCount[l.fixtureId] > 1; });
+  var evPos  = stats.ev >= 0;
+  var sign   = evPos ? '+' : '';
+  var ret10  = Math.round(stats.combinedOdds * 10 * 10) / 10;
+  var evGbp  = Math.round(Math.abs(stats.ev) * 10) / 100;
+  var hasSgm = legs.some(function (l) { return gameCount[l.fixtureId] > 1; });
 
   statsEl.innerHTML =
     '<div class="acca-stats-card">' +
-      '<h3 class="section-title">📊 Acca Analysis</h3>' +
+      '<div class="section-title">Acca Analysis</div>' +
       '<div class="acca-stats-grid">' +
         '<div class="acca-stat-box">' +
           '<span class="acca-stat-label">Combined Odds</span>' +
           '<span class="acca-stat-val accent-val">' + stats.combinedOdds + '</span>' +
         '</div>' +
         '<div class="acca-stat-box">' +
-          '<span class="acca-stat-label">Our Win Probability</span>' +
+          '<span class="acca-stat-label">Win Probability</span>' +
           '<span class="acca-stat-val">' + stats.winProb + '%</span>' +
         '</div>' +
         '<div class="acca-stat-box">' +
@@ -115,7 +107,7 @@ function renderAccaPage() {
           '</span>' +
         '</div>' +
         '<div class="acca-stat-box">' +
-          '<span class="acca-stat-label">£10 Potential Return</span>' +
+          '<span class="acca-stat-label">£10 Return</span>' +
           '<span class="acca-stat-val">£' + ret10 + '</span>' +
         '</div>' +
       '</div>' +
@@ -123,61 +115,60 @@ function renderAccaPage() {
       '<div class="acca-ev-block ' + (evPos ? 'ev-pos' : 'ev-neg') + '">' +
         '<div class="acca-ev-label">Expected Value on £10 stake</div>' +
         '<div class="acca-ev-amount">' + sign + '£' + evGbp + '</div>' +
-        '<div class="acca-ev-pct">EV: ' + sign + stats.ev + '%</div>' +
+        '<div class="acca-ev-pct">EV ' + sign + stats.ev + '%</div>' +
       '</div>' +
 
       '<div class="acca-verdict-banner ' + (evPos ? 'verdict-pos' : 'verdict-neg') + '">' +
         (evPos
-          ? '✓ POSITIVE EV — This acca has an overall edge. Worth placing.'
-          : '✗ NEGATIVE EV — Remove the no-value legs to improve your edge.') +
+          ? 'Positive EV — this acca has an overall edge'
+          : 'Negative EV — remove no-value legs to improve your edge') +
       '</div>' +
 
       (hasSgm
-        ? '<p class="acca-sgm-note">⚠️ One or more legs are from the same game (SGM). ' +
-          'Same-game markets can be correlated so the EV estimate is approximate.</p>'
+        ? '<p class="acca-sgm-note">One or more legs are from the same game (SGM). ' +
+          'Same-game markets can be correlated — the EV estimate is approximate.</p>'
         : '') +
 
       '<div class="acca-actions">' +
         '<a href="/" class="acca-browse-btn">+ Add More Legs</a>' +
-        '<button class="acca-clear-btn" onclick="if(confirm(\'Clear your acca?\')) Acca.clear()">🗑 Clear Acca</button>' +
+        '<button class="acca-clear-btn" onclick="if(confirm(\'Clear your acca?\')) Acca.clear()">Clear Acca</button>' +
       '</div>' +
     '</div>' +
 
-    /* Best bookmakers section */
     '<div class="bookie-rec-card">' +
-      '<h3 class="section-title">🏆 Best Places to Place This Acca</h3>' +
+      '<div class="section-title">Best Places to Place This Acca</div>' +
       '<p class="bookie-rec-sub">These bookmakers offer acca bonuses and best-price guarantees for multi-bets.</p>' +
       '<div class="bookie-list">' +
         '<div class="bookie-row">' +
           '<div class="bookie-info">' +
             '<span class="bookie-name">Bet365</span>' +
-            '<span class="bookie-perk">⭐ Acca Edge — up to 70% bonus on winning accas</span>' +
+            '<span class="bookie-perk">Acca Edge — up to 70% bonus on winning accas</span>' +
           '</div>' +
           '<a class="bookie-btn" href="https://www.bet365.com" target="_blank" rel="noopener">Bet Now ↗</a>' +
         '</div>' +
         '<div class="bookie-row">' +
           '<div class="bookie-info">' +
             '<span class="bookie-name">William Hill</span>' +
-            '<span class="bookie-perk">⭐ Acca Insurance — money back if 1 leg loses</span>' +
+            '<span class="bookie-perk">Acca Insurance — money back if 1 leg loses</span>' +
           '</div>' +
           '<a class="bookie-btn" href="https://www.williamhill.com" target="_blank" rel="noopener">Bet Now ↗</a>' +
         '</div>' +
         '<div class="bookie-row">' +
           '<div class="bookie-info">' +
             '<span class="bookie-name">Sky Bet</span>' +
-            '<span class="bookie-perk">⭐ Acca Boost — enhanced odds on 5+ fold accas</span>' +
+            '<span class="bookie-perk">Acca Boost — enhanced odds on 5+ fold accas</span>' +
           '</div>' +
           '<a class="bookie-btn" href="https://www.skybet.com" target="_blank" rel="noopener">Bet Now ↗</a>' +
         '</div>' +
         '<div class="bookie-row">' +
           '<div class="bookie-info">' +
             '<span class="bookie-name">Betfair</span>' +
-            '<span class="bookie-perk">⭐ Best-Price Guarantee — top odds on all markets</span>' +
+            '<span class="bookie-perk">Best-Price Guarantee — top odds on all markets</span>' +
           '</div>' +
           '<a class="bookie-btn" href="https://www.betfair.com" target="_blank" rel="noopener">Bet Now ↗</a>' +
         '</div>' +
       '</div>' +
-      '<p class="bookie-disclaimer">18+ only. Gamble responsibly. T&Cs apply. Odds subject to change.</p>' +
+      '<p class="bookie-disclaimer">18+ only. Gamble responsibly. T&Cs apply.</p>' +
     '</div>';
 }
 
