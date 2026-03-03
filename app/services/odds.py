@@ -140,13 +140,15 @@ class OddsService:
         home_team: str,
         away_team: str,
         sport_key: Optional[str],
+        fixture_id: Optional[int] = None,
     ) -> Optional[dict]:
         """
         Returns best odds and per-bookmaker breakdown for a given match.
         Structure: {"home_team": str, "away_team": str, "bookmakers": [...], "best": {...}}
         """
         if self.demo_mode or not sport_key:
-            return _build_result(home_team, away_team, DEMO_ODDS)
+            demo_bks = FIXTURE_DEMO_ODDS.get(fixture_id, DEMO_ODDS)
+            return _build_result(home_team, away_team, demo_bks)
 
         try:
             resp = requests.get(

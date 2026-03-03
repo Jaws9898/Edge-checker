@@ -20,6 +20,14 @@ def acca():
     return render_template("acca.html", leagues=LEAGUES, demo_mode=_football.demo_mode)
 
 
+def _market_odds(prob_pct, margin=6):
+    """Estimate typical bookmaker odds for a binary market (BTTS / Over 2.5)."""
+    if prob_pct <= 0:
+        return None
+    bookie_prob = min(prob_pct + margin, 93) / 100
+    return round(1 / bookie_prob * 100) / 100
+
+
 @main.route("/")
 def index():
     try:
@@ -28,9 +36,34 @@ def index():
         league_id = 39
 
     fixtures = _football.get_upcoming_fixtures(league_id)
+
+    cards = []
+    for f in fixtures:
+        home    = f["teams"]["home"]
+        away    = f["teams"]["away"]
+        lid     = f["league"]["id"]
+        fid     = f["fixture"]["id"]
+        hf      = _football.get_team_form(home["id"], lid)
+        af      = _football.get_team_form(away["id"], lid)
+        h2h     = _football.get_h2h(home["id"], away["id"])
+        hs      = form_stats(hf)
+        aws     = form_stats(af)
+        sport   = SPORT_KEYS.get(lid)
+        odds    = _odds.get_match_odds(home["name"], away["name"], sport, fixture_id=fid)
+        verdict = _build_verdict(home["name"], away["name"], hs, aws, h2h, odds)
+        cards.append({
+            "fixture":    f,
+            "home_form":  hf,
+            "away_form":  af,
+            "verdict":    verdict,
+            "odds":       odds,
+            "btts_odds":  _market_odds(verdict["btts_pct"]),
+            "over25_odds": _market_odds(verdict["over25_pct"]),
+        })
+
     return render_template(
         "index.html",
-        fixtures=fixtures,
+        cards=cards,
         leagues=LEAGUES,
         selected_league=league_id,
         demo_mode=_football.demo_mode,
@@ -56,7 +89,7 @@ def match_detail(fixture_id):
     away_stats = form_stats(away_form)
 
     sport_key = SPORT_KEYS.get(league_id)
-    odds = _odds.get_match_odds(home["name"], away["name"], sport_key)
+    odds = _odds.get_match_odds(home["name"], away["name"], sport_key, fixture_id=fixture_id)
 
     # Build simple verdict based on form + h2h
     verdict = _build_verdict(home["name"], away["name"], home_stats, away_stats, h2h, odds)

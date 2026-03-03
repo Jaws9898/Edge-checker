@@ -6,7 +6,7 @@
 
   <div class="hero">
     <h1>Find the <span class="accent">Edge</span> in Every Bet</h1>
-    <p class="hero-sub">Real stats behind every fixture. Compare odds. Bet smarter.</p>
+    <p class="hero-sub">Stats-powered value finder. Add legs to your acca in one click.</p>
   </div>
 
   <!-- League tabs -->
@@ -19,40 +19,178 @@
     {% endfor %}
   </div>
 
-  <!-- Fixtures grid -->
-  {% if fixtures %}
+  <!-- Fixture cards -->
+  {% if cards %}
   <div class="fixtures-grid">
-    {% for f in fixtures %}
-    {% set home = f.teams.home %}
-    {% set away = f.teams.away %}
-    {% set fid  = f.fixture.id %}
+    {% for card in cards %}
+    {% set f       = card.fixture %}
+    {% set verdict = card.verdict %}
+    {% set odds    = card.odds %}
+    {% set home    = f.teams.home %}
+    {% set away    = f.teams.away %}
+    {% set fid     = f.fixture.id %}
+    {% set dt      = f.fixture.date %}
+
     <a href="/match/{{ fid }}" class="fixture-card">
-      <div class="fixture-league">
-        {{ f.league.name }} &mdash; {{ f.league.round }}
+
+      <!-- Top meta row -->
+      <div class="fc-meta">
+        <span class="fc-league">{{ f.league.name }}</span>
+        <span class="fc-round">{{ f.league.round }}</span>
+        <span class="fc-time">{{ dt[8:10] }}/{{ dt[5:7] }} {{ dt[11:16] }}</span>
       </div>
-      <div class="fixture-teams">
-        <div class="team">
-          <img src="{{ home.logo }}" alt="{{ home.name }}" class="team-logo"
+
+      <!-- Teams + form -->
+      <div class="fc-teams">
+        <div class="fc-team">
+          <img src="{{ home.logo }}" alt="{{ home.name }}" class="fc-logo"
                onerror="this.style.display='none'" />
-          <span class="team-name">{{ home.name }}</span>
+          <span class="fc-name">{{ home.name }}</span>
+          <div class="fc-form">
+            {% for r, gf, ga in card.home_form %}
+            <span class="fdot fdot-{{ r }}" title="{{ r }} {{ gf }}-{{ ga }}"></span>
+            {% endfor %}
+          </div>
         </div>
-        <div class="vs-block">
-          <span class="vs">VS</span>
-          <span class="fixture-time">{{ f.fixture.date | replace("T", " ") | truncate(16, True, "") }}</span>
+
+        <div class="fc-vs">
+          <span class="fc-vs-label">VS</span>
         </div>
-        <div class="team team-away">
-          <img src="{{ away.logo }}" alt="{{ away.name }}" class="team-logo"
+
+        <div class="fc-team fc-team-away">
+          <img src="{{ away.logo }}" alt="{{ away.name }}" class="fc-logo"
                onerror="this.style.display='none'" />
-          <span class="team-name">{{ away.name }}</span>
+          <span class="fc-name">{{ away.name }}</span>
+          <div class="fc-form">
+            {% for r, gf, ga in card.away_form %}
+            <span class="fdot fdot-{{ r }}" title="{{ r }} {{ gf }}-{{ ga }}"></span>
+            {% endfor %}
+          </div>
         </div>
       </div>
-      <div class="fixture-footer">
-        <span class="venue">📍 {{ f.fixture.venue.name if f.fixture.venue else "" }}</span>
-        <span class="cta">View Analysis →</span>
+
+      <!-- 3-way probability bar -->
+      <div class="fc-prob-bar">
+        <span class="fc-prob-lbl fc-prob-h">{{ verdict.home_pct }}%</span>
+        <div class="fc-bar-track">
+          <div class="fc-bar-h" style="width:{{ verdict.home_pct }}%"
+               title="{{ home.name }} {{ verdict.home_pct }}%"></div>
+          <div class="fc-bar-d" style="width:{{ verdict.draw_pct }}%"
+               title="Draw {{ verdict.draw_pct }}%"></div>
+          <div class="fc-bar-a" style="width:{{ verdict.away_pct }}%"
+               title="{{ away.name }} {{ verdict.away_pct }}%"></div>
+        </div>
+        <span class="fc-prob-lbl fc-prob-a">{{ verdict.away_pct }}%</span>
       </div>
+
+      <!-- Verdict row -->
+      <div class="fc-verdict-row">
+        <span class="fc-tip">⚡ {{ verdict.tip }}</span>
+        <span class="fc-conf confidence-{{ verdict.tip_confidence | lower }}">{{ verdict.tip_confidence }}</span>
+        {% if verdict.btts_likely %}
+        <span class="fc-tag fc-btts">BTTS ✓</span>
+        {% endif %}
+        {% if verdict.over25_likely %}
+        <span class="fc-tag fc-o25">O2.5 ✓</span>
+        {% endif %}
+      </div>
+
+      <!-- Quick-add market buttons -->
+      <div class="fc-markets" onclick="event.stopPropagation()">
+        <span class="fc-markets-lbl">Quick Add:</span>
+        <div class="fc-mkt-row">
+          {% if odds and odds.best.home %}
+          <button class="mkt-btn"
+            data-fid="{{ fid }}"
+            data-match="{{ home.name }} vs {{ away.name }}"
+            data-league="{{ f.league.name }}"
+            data-date="{{ dt[:10] }}"
+            data-market="home"
+            data-label="{{ home.name }} Win"
+            data-odds="{{ odds.best.home }}"
+            data-pct="{{ verdict.home_pct }}"
+            onclick="event.preventDefault(); quickAcca(this)">
+            <span class="mkt-name">{{ home.name | truncate(9, True, '') }} Win</span>
+            <span class="mkt-odds">{{ odds.best.home }}</span>
+          </button>
+          {% endif %}
+
+          {% if odds and odds.best.draw %}
+          <button class="mkt-btn"
+            data-fid="{{ fid }}"
+            data-match="{{ home.name }} vs {{ away.name }}"
+            data-league="{{ f.league.name }}"
+            data-date="{{ dt[:10] }}"
+            data-market="draw"
+            data-label="Draw"
+            data-odds="{{ odds.best.draw }}"
+            data-pct="{{ verdict.draw_pct }}"
+            onclick="event.preventDefault(); quickAcca(this)">
+            <span class="mkt-name">Draw</span>
+            <span class="mkt-odds">{{ odds.best.draw }}</span>
+          </button>
+          {% endif %}
+
+          {% if odds and odds.best.away %}
+          <button class="mkt-btn"
+            data-fid="{{ fid }}"
+            data-match="{{ home.name }} vs {{ away.name }}"
+            data-league="{{ f.league.name }}"
+            data-date="{{ dt[:10] }}"
+            data-market="away"
+            data-label="{{ away.name }} Win"
+            data-odds="{{ odds.best.away }}"
+            data-pct="{{ verdict.away_pct }}"
+            onclick="event.preventDefault(); quickAcca(this)">
+            <span class="mkt-name">{{ away.name | truncate(9, True, '') }} Win</span>
+            <span class="mkt-odds">{{ odds.best.away }}</span>
+          </button>
+          {% endif %}
+
+          {% if card.btts_odds %}
+          <button class="mkt-btn mkt-btn-alt"
+            data-fid="{{ fid }}"
+            data-match="{{ home.name }} vs {{ away.name }}"
+            data-league="{{ f.league.name }}"
+            data-date="{{ dt[:10] }}"
+            data-market="btts"
+            data-label="Both Teams to Score"
+            data-odds="{{ card.btts_odds }}"
+            data-pct="{{ verdict.btts_pct }}"
+            onclick="event.preventDefault(); quickAcca(this)">
+            <span class="mkt-name">BTTS</span>
+            <span class="mkt-odds">{{ card.btts_odds }}</span>
+          </button>
+          {% endif %}
+
+          {% if card.over25_odds %}
+          <button class="mkt-btn mkt-btn-alt"
+            data-fid="{{ fid }}"
+            data-match="{{ home.name }} vs {{ away.name }}"
+            data-league="{{ f.league.name }}"
+            data-date="{{ dt[:10] }}"
+            data-market="over25"
+            data-label="Over 2.5 Goals"
+            data-odds="{{ card.over25_odds }}"
+            data-pct="{{ verdict.over25_pct }}"
+            onclick="event.preventDefault(); quickAcca(this)">
+            <span class="mkt-name">O2.5</span>
+            <span class="mkt-odds">{{ card.over25_odds }}</span>
+          </button>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Card footer -->
+      <div class="fc-footer">
+        <span class="fc-venue">📍 {{ f.fixture.venue.name if f.fixture.venue else "" }}</span>
+        <span class="fc-analysis-link">Full Analysis →</span>
+      </div>
+
     </a>
     {% endfor %}
   </div>
+
   {% else %}
   <div class="empty-state">
     <p>No upcoming fixtures found for this league.</p>
@@ -60,4 +198,35 @@
   {% endif %}
 
 </div>
+
+<script>
+/* Mark already-added market buttons on page load */
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.mkt-btn').forEach(function (btn) {
+    var fid    = parseInt(btn.dataset.fid);
+    var market = btn.dataset.market;
+    if (window.Acca && window.Acca.has(fid, market)) {
+      btn.classList.add('mkt-added');
+      btn.querySelector('.mkt-name').textContent = '✓';
+    }
+  });
+});
+
+function quickAcca(btn) {
+  if (btn.classList.contains('mkt-added')) return;
+  var d = btn.dataset;
+  window.Acca.add({
+    fixtureId:   parseInt(d.fid),
+    matchName:   d.match,
+    league:      d.league,
+    date:        d.date,
+    market:      d.market,
+    marketLabel: d.label,
+    odds:        parseFloat(d.odds),
+    ourPct:      parseInt(d.pct),
+  });
+  btn.classList.add('mkt-added');
+  btn.querySelector('.mkt-name').textContent = '✓';
+}
+</script>
 {% endblock %}
