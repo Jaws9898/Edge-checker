@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, request, jsonify
 
 from .services.football import FootballService, LEAGUES, form_stats
 from .services.odds import OddsService, SPORT_KEYS, implied_probability
+from .services.acca_engine import analyse_acca
 
 main = Blueprint("main", __name__)
 
@@ -18,6 +19,34 @@ def health():
 @main.route("/acca")
 def acca():
     return render_template("acca.html", leagues=LEAGUES, demo_mode=_football.demo_mode)
+
+
+@main.route("/api/acca/analyse", methods=["POST"])
+def api_acca_analyse():
+    data = request.get_json(silent=True)
+    if not data or "legs" not in data:
+        return jsonify({"error": "Invalid request"}), 400
+
+    legs = data["legs"]
+    if not legs:
+        return jsonify(analyse_acca([], {}))
+
+    # Fetch full per-bookmaker odds for each unique fixture
+    odds_by_fixture = {}
+    for leg in legs:
+        fid = leg.get("fixtureId")
+        if not fid or fid in odds_by_fixture:
+            continue
+        fixture = _football.get_fixture(fid)
+        if not fixture:
+            continue
+        home      = fixture["teams"]["home"]["name"]
+        away      = fixture["teams"]["away"]["name"]
+        league_id = fixture["league"]["id"]
+        sport_key = SPORT_KEYS.get(league_id)
+        odds_by_fixture[fid] = _odds.get_fixture_odds_full(fid, home, away, sport_key)
+
+    return jsonify(analyse_acca(legs, odds_by_fixture))
 
 
 def _market_odds(prob_pct, margin=6):

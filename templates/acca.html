@@ -11,16 +11,142 @@
 
   <div id="acca-legs-container"></div>
   <div id="acca-stats-container"></div>
+  <div id="acca-engine-container"></div>
 
   <p class="acca-disclaimer">Odds and probabilities are estimates based on recent form and head-to-head data.
     Not financial advice. 18+ — please gamble responsibly.</p>
 
 </div>
 
+<style>
+/* ── Bookmaker comparison ─────────────────────────────── */
+.bookie-cmp-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-top: 20px;
+}
+.bookie-cmp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.bookie-cmp-header .section-title { margin-bottom: 0; }
+.bookie-cmp-subtitle {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+.bookie-cmp-table { width: 100%; border-collapse: collapse; }
+.bookie-cmp-table th {
+  text-align: left;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0 8px 10px;
+  border-bottom: 1px solid var(--border);
+}
+.bookie-cmp-table th.right,
+.bookie-cmp-table td.right { text-align: right; }
+.bookie-cmp-table td {
+  padding: 11px 8px;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  vertical-align: middle;
+}
+.bookie-cmp-table tr:last-child td { border-bottom: none; }
+.bookie-cmp-table tr.bk-best td { background: rgba(93,221,114,0.06); }
+.bk-name-cell { display: flex; align-items: center; gap: 8px; }
+.bk-best-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  background: var(--accent);
+  color: #000;
+  border-radius: 4px;
+  padding: 2px 6px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.bk-odds-val {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.bk-best .bk-odds-val { color: var(--accent); font-size: 1.05rem; }
+.bk-coverage {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.bk-missing { color: #f59e0b; }
+.bk-spread-note {
+  margin-top: 14px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+.bk-spread-note strong { color: var(--text); }
+
+/* ── Correlation warnings ─────────────────────────────── */
+.corr-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-top: 16px;
+}
+.corr-list { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+.corr-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.corr-item.sev-high   { background: rgba(239,68,68,0.08);  border-left: 3px solid #ef4444; }
+.corr-item.sev-medium { background: rgba(245,158,11,0.08); border-left: 3px solid #f59e0b; }
+.corr-item.sev-low    { background: rgba(96,165,250,0.08); border-left: 3px solid #60a5fa; }
+.corr-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+.corr-body { flex: 1; }
+.corr-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 3px;
+}
+.sev-high   .corr-label { color: #f87171; }
+.sev-medium .corr-label { color: #fbbf24; }
+.sev-low    .corr-label { color: #93c5fd; }
+.corr-match { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px; }
+.corr-msg   { font-size: 0.85rem; color: var(--text); }
+
+/* ── Engine loading state ─────────────────────────────── */
+.engine-loading {
+  text-align: center;
+  padding: 28px;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+.engine-loading .spinner {
+  display: inline-block;
+  width: 18px; height: 18px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+
 <script>
 function renderAccaPage() {
-  var statsEl = document.getElementById('acca-stats-container');
-  var legsEl  = document.getElementById('acca-legs-container');
+  var statsEl  = document.getElementById('acca-stats-container');
+  var legsEl   = document.getElementById('acca-legs-container');
+  var engineEl = document.getElementById('acca-engine-container');
   if (!legsEl) return;
 
   var stats = window.Acca ? window.Acca.stats() : null;
@@ -35,7 +161,8 @@ function renderAccaPage() {
         '<p>Browse fixtures and use Quick Add or Check Your Bet to build your acca.</p>' +
         '<a href="/" class="acca-browse-btn">Browse Fixtures</a>' +
       '</div>';
-    if (statsEl) statsEl.innerHTML = '';
+    if (statsEl)  statsEl.innerHTML  = '';
+    if (engineEl) engineEl.innerHTML = '';
     return;
   }
 
@@ -45,7 +172,7 @@ function renderAccaPage() {
     gameCount[legs[i].fixtureId] = (gameCount[legs[i].fixtureId] || 0) + 1;
   }
 
-  /* ── Render legs ── */
+  /* ── Render leg cards ── */
   var html = '<div class="acca-legs">';
   for (var j = 0; j < legs.length; j++) {
     var leg     = legs[j];
@@ -77,7 +204,6 @@ function renderAccaPage() {
       '</div>';
   }
   html += '</div>';
-
   html += '<a href="/" class="acca-add-more-btn">+ Add another leg</a>';
   legsEl.innerHTML = html;
 
@@ -131,46 +257,129 @@ function renderAccaPage() {
 
       '<div class="acca-actions">' +
         '<a href="/" class="acca-browse-btn">+ Add More Legs</a>' +
-        '<button class="acca-clear-btn" onclick="if(confirm(\'Clear your acca?\')) Acca.clear()">Clear Acca</button>' +
+        '<button class="acca-clear-btn" onclick="if(confirm(\'Clear your acca?\')) { Acca.clear(); }">Clear Acca</button>' +
       '</div>' +
-    '</div>' +
-
-    '<div class="bookie-rec-card">' +
-      '<div class="section-title">Best Places to Place This Acca</div>' +
-      '<p class="bookie-rec-sub">These bookmakers offer acca bonuses and best-price guarantees for multi-bets.</p>' +
-      '<div class="bookie-list">' +
-        '<div class="bookie-row">' +
-          '<div class="bookie-info">' +
-            '<span class="bookie-name">Bet365</span>' +
-            '<span class="bookie-perk">Acca Edge — up to 70% bonus on winning accas</span>' +
-          '</div>' +
-          '<a class="bookie-btn" href="https://www.bet365.com" target="_blank" rel="noopener">Bet Now ↗</a>' +
-        '</div>' +
-        '<div class="bookie-row">' +
-          '<div class="bookie-info">' +
-            '<span class="bookie-name">William Hill</span>' +
-            '<span class="bookie-perk">Acca Insurance — money back if 1 leg loses</span>' +
-          '</div>' +
-          '<a class="bookie-btn" href="https://www.williamhill.com" target="_blank" rel="noopener">Bet Now ↗</a>' +
-        '</div>' +
-        '<div class="bookie-row">' +
-          '<div class="bookie-info">' +
-            '<span class="bookie-name">Sky Bet</span>' +
-            '<span class="bookie-perk">Acca Boost — enhanced odds on 5+ fold accas</span>' +
-          '</div>' +
-          '<a class="bookie-btn" href="https://www.skybet.com" target="_blank" rel="noopener">Bet Now ↗</a>' +
-        '</div>' +
-        '<div class="bookie-row">' +
-          '<div class="bookie-info">' +
-            '<span class="bookie-name">Betfair</span>' +
-            '<span class="bookie-perk">Best-Price Guarantee — top odds on all markets</span>' +
-          '</div>' +
-          '<a class="bookie-btn" href="https://www.betfair.com" target="_blank" rel="noopener">Bet Now ↗</a>' +
-        '</div>' +
-      '</div>' +
-      '<p class="bookie-disclaimer">18+ only. Gamble responsibly. T&Cs apply.</p>' +
     '</div>';
+
+  /* ── Kick off engine analysis ── */
+  analyseAcca(legs);
 }
+
+
+/* ── Acca Engine API call ─────────────────────────────── */
+function analyseAcca(legs) {
+  var el = document.getElementById('acca-engine-container');
+  if (!el || !legs.length) return;
+
+  el.innerHTML =
+    '<div class="engine-loading"><span class="spinner"></span>Checking bookmaker prices&hellip;</div>';
+
+  fetch('/api/acca/analyse', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ legs: legs }),
+  })
+  .then(function (r) { return r.json(); })
+  .then(function (data) { renderEngineResults(data, el); })
+  .catch(function () {
+    el.innerHTML =
+      '<div class="engine-loading">Could not load bookmaker comparison.</div>';
+  });
+}
+
+
+/* ── Render engine results ─────────────────────────────── */
+function renderEngineResults(data, el) {
+  var html = '';
+
+  /* ── Bookmaker comparison table ── */
+  var bkList  = data.bookmaker_comparison || [];
+  var best    = data.best_bookmaker || null;
+  var summary = data.summary || {};
+
+  html += '<div class="bookie-cmp-card">';
+  html +=   '<div class="bookie-cmp-header">';
+  html +=     '<div class="section-title">Best Bookmaker for This Acca</div>';
+  html +=   '</div>';
+  html +=   '<p class="bookie-cmp-subtitle">';
+  html +=     'Live prices across bookmakers — place where you get the best combined odds.';
+  html +=   '</p>';
+
+  if (bkList.length === 0) {
+    html += '<p class="bookie-cmp-subtitle">No bookmaker data available.</p>';
+  } else {
+    html += '<table class="bookie-cmp-table">';
+    html +=   '<thead><tr>';
+    html +=     '<th>Bookmaker</th>';
+    html +=     '<th class="right">Combined Odds</th>';
+    html +=     '<th class="right">Coverage</th>';
+    html +=   '</tr></thead>';
+    html +=   '<tbody>';
+
+    for (var i = 0; i < bkList.length; i++) {
+      var bk      = bkList[i];
+      var isBest  = best && bk.bookmaker === best.bookmaker;
+      var rowCls  = isBest ? 'bk-best' : '';
+
+      var coverageTxt;
+      if (bk.missing && bk.missing.length > 0) {
+        coverageTxt = '<span class="bk-missing">Missing: ' + bk.missing.join(', ') + '</span>';
+      } else {
+        coverageTxt = '<span class="bk-coverage">All ' + bk.legs_total + ' legs</span>';
+      }
+
+      html += '<tr class="' + rowCls + '">';
+      html +=   '<td>';
+      html +=     '<div class="bk-name-cell">';
+      html +=       bk.bookmaker;
+      if (isBest) {
+        html +=     '<span class="bk-best-badge">Best Price</span>';
+      }
+      html +=     '</div>';
+      html +=   '</td>';
+      html +=   '<td class="right"><span class="bk-odds-val">' + bk.combined_odds.toFixed(2) + '</span></td>';
+      html +=   '<td class="right">' + coverageTxt + '</td>';
+      html += '</tr>';
+    }
+    html += '</tbody></table>';
+
+    if (summary.price_spread && summary.price_spread > 0) {
+      html +=
+        '<p class="bk-spread-note">Price spread across bookmakers: ' +
+        '<strong>' + summary.price_spread.toFixed(2) + '</strong> combined odds — ' +
+        'worth shopping around.</p>';
+    }
+  }
+
+  html += '</div>'; /* .bookie-cmp-card */
+
+  /* ── Correlation warnings ── */
+  var corrs = data.correlations || [];
+  if (corrs.length > 0) {
+    var sevIcon = { high: '⚠️', medium: '⚠️', low: 'ℹ️' };
+
+    html += '<div class="corr-card">';
+    html +=   '<div class="section-title">Correlation Warnings</div>';
+    html +=   '<div class="corr-list">';
+
+    for (var k = 0; k < corrs.length; k++) {
+      var c = corrs[k];
+      html += '<div class="corr-item sev-' + c.severity + '">';
+      html +=   '<div class="corr-icon">' + (sevIcon[c.severity] || 'ℹ️') + '</div>';
+      html +=   '<div class="corr-body">';
+      html +=     '<div class="corr-label">' + c.label + '</div>';
+      html +=     '<div class="corr-match">' + c.matchName + '</div>';
+      html +=     '<div class="corr-msg">' + c.message + '</div>';
+      html +=   '</div>';
+      html += '</div>';
+    }
+
+    html += '</div></div>'; /* .corr-list .corr-card */
+  }
+
+  el.innerHTML = html;
+}
+
 
 document.addEventListener('DOMContentLoaded', renderAccaPage);
 </script>
