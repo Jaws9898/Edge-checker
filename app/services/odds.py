@@ -14,15 +14,114 @@ SPORT_KEYS = {
 }
 
 # Demo odds data for when no API key is set
+# Generic fallback (used if fixture not found in FIXTURE_DEMO_ODDS)
 DEMO_ODDS = [
     {"bookmaker": "Bet365",        "home": 2.50, "draw": 3.40, "away": 2.80},
     {"bookmaker": "William Hill",  "home": 2.45, "draw": 3.30, "away": 2.90},
     {"bookmaker": "Sky Bet",       "home": 2.55, "draw": 3.25, "away": 2.85},
     {"bookmaker": "Betfair",       "home": 2.62, "draw": 3.45, "away": 2.75},
     {"bookmaker": "Paddy Power",   "home": 2.50, "draw": 3.50, "away": 2.80},
-    {"bookmaker": "Ladbrokes",     "home": 2.40, "draw": 3.20, "away": 2.90},
-    {"bookmaker": "Coral",         "home": 2.45, "draw": 3.30, "away": 2.88},
 ]
+
+# Per-fixture realistic odds for demo mode
+FIXTURE_DEMO_ODDS = {
+    1001: [  # Arsenal vs Chelsea
+        {"bookmaker": "Bet365",       "home": 2.20, "draw": 3.60, "away": 3.40},
+        {"bookmaker": "William Hill", "home": 2.15, "draw": 3.50, "away": 3.50},
+        {"bookmaker": "Sky Bet",      "home": 2.25, "draw": 3.60, "away": 3.30},
+        {"bookmaker": "Betfair",      "home": 2.28, "draw": 3.65, "away": 3.35},
+        {"bookmaker": "Paddy Power",  "home": 2.20, "draw": 3.55, "away": 3.45},
+        {"bookmaker": "Ladbrokes",    "home": 2.15, "draw": 3.50, "away": 3.40},
+    ],
+    1002: [  # Liverpool vs Man City
+        {"bookmaker": "Bet365",       "home": 2.10, "draw": 3.80, "away": 3.20},
+        {"bookmaker": "William Hill", "home": 2.05, "draw": 3.70, "away": 3.30},
+        {"bookmaker": "Sky Bet",      "home": 2.15, "draw": 3.75, "away": 3.10},
+        {"bookmaker": "Betfair",      "home": 2.18, "draw": 3.85, "away": 3.15},
+        {"bookmaker": "Paddy Power",  "home": 2.12, "draw": 3.80, "away": 3.20},
+        {"bookmaker": "Ladbrokes",    "home": 2.05, "draw": 3.70, "away": 3.25},
+    ],
+    1003: [  # Man Utd vs Tottenham
+        {"bookmaker": "Bet365",       "home": 2.80, "draw": 3.40, "away": 2.50},
+        {"bookmaker": "William Hill", "home": 2.75, "draw": 3.30, "away": 2.55},
+        {"bookmaker": "Sky Bet",      "home": 2.85, "draw": 3.40, "away": 2.45},
+        {"bookmaker": "Betfair",      "home": 2.90, "draw": 3.50, "away": 2.50},
+        {"bookmaker": "Paddy Power",  "home": 2.80, "draw": 3.35, "away": 2.55},
+        {"bookmaker": "Ladbrokes",    "home": 2.70, "draw": 3.30, "away": 2.60},
+    ],
+    1007: [  # Newcastle vs West Ham
+        {"bookmaker": "Bet365",       "home": 2.00, "draw": 3.60, "away": 3.60},
+        {"bookmaker": "William Hill", "home": 1.95, "draw": 3.50, "away": 3.75},
+        {"bookmaker": "Sky Bet",      "home": 2.05, "draw": 3.55, "away": 3.60},
+        {"bookmaker": "Betfair",      "home": 2.08, "draw": 3.65, "away": 3.55},
+        {"bookmaker": "Paddy Power",  "home": 2.00, "draw": 3.60, "away": 3.65},
+        {"bookmaker": "Ladbrokes",    "home": 1.95, "draw": 3.50, "away": 3.70},
+    ],
+    1004: [  # Real Madrid vs Barcelona
+        {"bookmaker": "Bet365",       "home": 2.30, "draw": 3.50, "away": 2.90},
+        {"bookmaker": "William Hill", "home": 2.25, "draw": 3.40, "away": 3.00},
+        {"bookmaker": "Sky Bet",      "home": 2.35, "draw": 3.50, "away": 2.85},
+        {"bookmaker": "Betfair",      "home": 2.38, "draw": 3.60, "away": 2.88},
+        {"bookmaker": "Paddy Power",  "home": 2.30, "draw": 3.50, "away": 2.95},
+        {"bookmaker": "Ladbrokes",    "home": 2.25, "draw": 3.40, "away": 2.90},
+    ],
+    1008: [  # Atletico Madrid vs Valencia
+        {"bookmaker": "Bet365",       "home": 1.75, "draw": 3.80, "away": 4.80},
+        {"bookmaker": "William Hill", "home": 1.72, "draw": 3.70, "away": 5.00},
+        {"bookmaker": "Sky Bet",      "home": 1.78, "draw": 3.80, "away": 4.70},
+        {"bookmaker": "Betfair",      "home": 1.80, "draw": 3.90, "away": 4.75},
+        {"bookmaker": "Paddy Power",  "home": 1.76, "draw": 3.85, "away": 4.80},
+        {"bookmaker": "Ladbrokes",    "home": 1.72, "draw": 3.75, "away": 4.90},
+    ],
+    1005: [  # Bayern Munich vs Dortmund
+        {"bookmaker": "Bet365",       "home": 1.60, "draw": 4.10, "away": 5.50},
+        {"bookmaker": "William Hill", "home": 1.57, "draw": 4.00, "away": 5.75},
+        {"bookmaker": "Sky Bet",      "home": 1.62, "draw": 4.10, "away": 5.40},
+        {"bookmaker": "Betfair",      "home": 1.65, "draw": 4.20, "away": 5.50},
+        {"bookmaker": "Paddy Power",  "home": 1.60, "draw": 4.00, "away": 5.60},
+        {"bookmaker": "Ladbrokes",    "home": 1.57, "draw": 4.00, "away": 5.75},
+    ],
+    1009: [  # Bayer Leverkusen vs RB Leipzig
+        {"bookmaker": "Bet365",       "home": 1.90, "draw": 3.60, "away": 4.20},
+        {"bookmaker": "William Hill", "home": 1.85, "draw": 3.50, "away": 4.40},
+        {"bookmaker": "Sky Bet",      "home": 1.93, "draw": 3.60, "away": 4.10},
+        {"bookmaker": "Betfair",      "home": 1.95, "draw": 3.70, "away": 4.20},
+        {"bookmaker": "Paddy Power",  "home": 1.90, "draw": 3.65, "away": 4.25},
+        {"bookmaker": "Ladbrokes",    "home": 1.87, "draw": 3.55, "away": 4.30},
+    ],
+    1006: [  # AC Milan vs Inter
+        {"bookmaker": "Bet365",       "home": 2.60, "draw": 3.30, "away": 2.60},
+        {"bookmaker": "William Hill", "home": 2.55, "draw": 3.20, "away": 2.70},
+        {"bookmaker": "Sky Bet",      "home": 2.65, "draw": 3.30, "away": 2.55},
+        {"bookmaker": "Betfair",      "home": 2.70, "draw": 3.40, "away": 2.60},
+        {"bookmaker": "Paddy Power",  "home": 2.62, "draw": 3.35, "away": 2.65},
+        {"bookmaker": "Ladbrokes",    "home": 2.55, "draw": 3.25, "away": 2.70},
+    ],
+    1010: [  # Juventus vs Napoli
+        {"bookmaker": "Bet365",       "home": 2.30, "draw": 3.40, "away": 3.00},
+        {"bookmaker": "William Hill", "home": 2.25, "draw": 3.30, "away": 3.10},
+        {"bookmaker": "Sky Bet",      "home": 2.35, "draw": 3.40, "away": 2.95},
+        {"bookmaker": "Betfair",      "home": 2.38, "draw": 3.50, "away": 3.00},
+        {"bookmaker": "Paddy Power",  "home": 2.30, "draw": 3.45, "away": 3.05},
+        {"bookmaker": "Ladbrokes",    "home": 2.25, "draw": 3.35, "away": 3.10},
+    ],
+    1011: [  # PSG vs Lyon
+        {"bookmaker": "Bet365",       "home": 1.40, "draw": 5.00, "away": 7.50},
+        {"bookmaker": "William Hill", "home": 1.38, "draw": 4.80, "away": 8.00},
+        {"bookmaker": "Sky Bet",      "home": 1.42, "draw": 5.00, "away": 7.00},
+        {"bookmaker": "Betfair",      "home": 1.45, "draw": 5.20, "away": 7.50},
+        {"bookmaker": "Paddy Power",  "home": 1.40, "draw": 5.00, "away": 7.50},
+        {"bookmaker": "Ladbrokes",    "home": 1.38, "draw": 4.80, "away": 8.00},
+    ],
+    1012: [  # Marseille vs Lille
+        {"bookmaker": "Bet365",       "home": 2.10, "draw": 3.40, "away": 3.40},
+        {"bookmaker": "William Hill", "home": 2.05, "draw": 3.30, "away": 3.50},
+        {"bookmaker": "Sky Bet",      "home": 2.15, "draw": 3.40, "away": 3.35},
+        {"bookmaker": "Betfair",      "home": 2.18, "draw": 3.50, "away": 3.35},
+        {"bookmaker": "Paddy Power",  "home": 2.10, "draw": 3.45, "away": 3.40},
+        {"bookmaker": "Ladbrokes",    "home": 2.05, "draw": 3.35, "away": 3.50},
+    ],
+}
 
 
 class OddsService:
